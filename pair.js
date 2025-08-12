@@ -20,10 +20,10 @@ function removeFile(FilePath) {
 
 router.get('/', async (req, res) => {
     let num = req.query.number;
-    async function PRIME-ALPHA-X-DULA-MD-Pair() {
+    async function DanuwaPair() {
         const { state, saveCreds } = await useMultiFileAuthState(`./session`);
         try {
-            let PRIME-ALPHA-X-DULA-MD-PairWeb = makeWASocket({
+            let DanuwaPairWeb = makeWASocket({
                 auth: {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
@@ -33,25 +33,25 @@ router.get('/', async (req, res) => {
                 browser: Browsers.macOS("Safari"),
             });
 
-            if (!PRIME-ALPHA-X-DULA-MD-PairWeb.authState.creds.registered) {
+            if (!DanuwaPairWeb.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
-                const code = await PRIME-ALPHA-X-DULA-MD-PairWeb.requestPairingCode(num);
+                const code = await DanuwaPairWeb.requestPairingCode(num);
                 if (!res.headersSent) {
                     await res.send({ code });
                 }
             }
 
-            PRIME-ALPHA-X-DULA-MD-PairWeb.ev.on('creds.update', saveCreds);
-            PRIME-ALPHA-X-DULA-MD-PairWeb.ev.on("connection.update", async (s) => {
+            DanuwaPairWeb.ev.on('creds.update', saveCreds);
+            DanuwaPairWeb.ev.on("connection.update", async (s) => {
                 const { connection, lastDisconnect } = s;
                 if (connection === "open") {
                     try {
                         await delay(10000);
-                        const sessionPRIME-ALPHA-X-DULA-MD- = fs.readFileSync('./session/creds.json');
+                        const sessionDanuwa = fs.readFileSync('./session/creds.json');
 
                         const auth_path = './session/';
-                        const user_jid = jidNormalizedUser(PRIME-ALPHA-X-DULA-MD-PairWeb.user.id);
+                        const user_jid = jidNormalizedUser(DanuwaPairWeb.user.id);
 
                       function randomMegaId(length = 6, numberLength = 4) {
                       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -69,12 +69,12 @@ router.get('/', async (req, res) => {
 
                         const sid = string_session;
 
-                        const dt = await PRIME-ALPHA-X-DULA-MD-PairWeb.sendMessage(user_jid, {
+                        const dt = await DanuwaPairWeb.sendMessage(user_jid, {
                             text: sid
                         });
 
                     } catch (e) {
-                        exec('pm2 restart PRIME-ALPHA-X-DULA-MD-');
+                        exec('pm2 restart danuwa');
                     }
 
                     await delay(100);
@@ -82,25 +82,25 @@ router.get('/', async (req, res) => {
                     process.exit(0);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
-                    PRIME-ALPHA-X-DULA-MD-Pair();
+                    DanuwaPair();
                 }
             });
         } catch (err) {
-            exec('pm2 restart PRIME-ALPHA-X-DULA-MD--md');
+            exec('pm2 restart danuwa-md');
             console.log("service restarted");
-            PRIME-ALPHA-X-DULA-MD-Pair();
+            DanuwaPair();
             await removeFile('./session');
             if (!res.headersSent) {
                 await res.send({ code: "Service Unavailable" });
             }
         }
     }
-    return await PRIME-ALPHA-X-DULA-MD-Pair();
+    return await DanuwaPair();
 });
 
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);
-    exec('pm2 restart PRIME-ALPHA-X-DULA-MD-');
+    exec('pm2 restart danuwa');
 });
 
 
